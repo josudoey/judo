@@ -10,15 +10,20 @@ type Note interface {
 	fmt.Stringer
 }
 
-type columnNote struct {
+type noteSetting struct {
 	sealedColumnSetting
+	sealedTableIndexSetting
 	text string
 }
 
-func (c *columnNote) String() string {
+func (c *noteSetting) String() string {
 	return lit.Add("note: ", lit.SingleQuote(c.text)).String()
 }
 
 func ColumnNote(text string) ColumnSetting {
-	return &columnNote{text: text}
+	return &noteSetting{text: text}
+}
+
+func TableIndexNote(text string) TableIndexSetting {
+	return &noteSetting{text: text}
 }

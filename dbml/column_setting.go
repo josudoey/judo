@@ -14,26 +14,6 @@ type sealedColumnSetting struct{}
 
 func (s sealedColumnSetting) columnSetting() {}
 
-type pK struct{ sealedColumnSetting }
-
-func (s *pK) String() string {
-	return "pk"
-}
-
-func PK() ColumnSetting {
-	return &pK{}
-}
-
-type primaryKey struct{ sealedColumnSetting }
-
-func (s *primaryKey) String() string {
-	return "primary key"
-}
-
-func PrimaryKey() ColumnSetting {
-	return &primaryKey{}
-}
-
 type null struct{ sealedColumnSetting }
 
 func (s *null) String() string {
@@ -52,16 +32,6 @@ func (s *notNull) String() string {
 
 func NotNull() ColumnSetting {
 	return &notNull{}
-}
-
-type unique struct{ sealedColumnSetting }
-
-func (s *unique) String() string {
-	return "unique"
-}
-
-func Unique() ColumnSetting {
-	return &unique{}
 }
 
 type defaultString struct {
@@ -171,4 +141,34 @@ func (c *columnManyToOne) String() string {
 
 func ColumnManyToOne(tableName string, columnName string) ColumnSetting {
 	return &columnManyToOne{TableName: tableName, ColumnName: columnName}
+}
+
+type columnOneToOne struct {
+	sealedColumnSetting
+
+	TableName  string
+	ColumnName string
+}
+
+func (c *columnOneToOne) String() string {
+	return "ref: - " + c.TableName + "." + c.ColumnName
+}
+
+func ColumnOneToOne(tableName string, columnName string) ColumnSetting {
+	return &columnOneToOne{TableName: tableName, ColumnName: columnName}
+}
+
+type columnManyToMany struct {
+	sealedColumnSetting
+
+	TableName  string
+	ColumnName string
+}
+
+func (c *columnManyToMany) String() string {
+	return "ref: <> " + c.TableName + "." + c.ColumnName
+}
+
+func ColumnManyToMany(tableName string, columnName string) ColumnSetting {
+	return &columnManyToMany{TableName: tableName, ColumnName: columnName}
 }

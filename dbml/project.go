@@ -1,6 +1,8 @@
 package dbml
 
 import (
+	"strings"
+
 	"github.com/josudoey/judo/lit"
 )
 
@@ -15,8 +17,13 @@ type Project struct {
 }
 
 func (p *Project) String() string {
+	name := p.Name
+	if strings.Contains(name, "-") {
+		name = lit.Quote(name).String()
+	}
+
 	l := lit.Add(
-		"Project ", p.Name, " {\n",
+		"Project ", name, " {\n",
 		"  database_type: ", lit.SingleQuote(p.DatabaseType), "\n",
 	)
 
