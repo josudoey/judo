@@ -166,7 +166,7 @@ var _ = cmd.AddCommand(
 				for _, footer := range tableFooters[tableName] {
 					doc.Append(footer)
 				}
-				doc.Append(dbml.NewLine())
+				doc.Append(dbml.Blankline())
 			}
 
 			fmt.Printf("%v", doc)
