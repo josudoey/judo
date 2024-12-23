@@ -1,18 +1,33 @@
-package main
+package cmd
 
 import (
-	"context"
-	"fmt"
-	"os"
-
-	_ "github.com/joho/godotenv/autoload"
-	"github.com/josudoey/judo/command"
+	"github.com/spf13/cobra"
 )
 
-func main() {
-	cmd := command.New()
-	if err := cmd.ExecuteContext(context.Background()); err != nil {
-		fmt.Fprintf(os.Stderr, "error: %v\n", err)
-		os.Exit(1)
+var cmds []*cobra.Command
+
+func NewCommand() *cobra.Command {
+	cmd := &cobra.Command{
+		CompletionOptions: cobra.CompletionOptions{
+			DisableDefaultCmd: true,
+			DisableNoDescFlag: true,
+		},
+		SilenceErrors: true,
+		SilenceUsage:  true,
 	}
+	cmd.AddCommand(cmds...)
+	return cmd
+}
+
+func AddCommand(cmd *cobra.Command) error {
+	cmds = append(cmds, cmd)
+	return nil
+}
+
+func SetupCommand(getCmds ...func() *cobra.Command) error {
+	for _, getCmd := range getCmds {
+		AddCommand(getCmd())
+	}
+
+	return nil
 }

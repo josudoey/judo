@@ -1,19 +1,20 @@
-package command
+package script
 
 import (
 	"context"
 	"fmt"
 
+	"github.com/josudoey/judo/cmd"
 	"github.com/josudoey/judo/core"
 	"github.com/josudoey/judo/dbml"
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
 )
 
-var _ = addCommand(
+var _ = cmd.AddCommand(
 	&cobra.Command{
-		Use: "pgx-dump-dbml",
-		RunE: commandRun(func(ctx context.Context, args []string) error {
+		Use: "dump-pg-dbml",
+		RunE: cmd.Run(func(ctx context.Context, args []string) error {
 			logger := core.UseLogger(ctx)
 			zap.Any("logger", logger)
 			script := NewPGXScript(ctx)
@@ -157,8 +158,8 @@ var _ = addCommand(
 	},
 )
 
-func (s *PGXScript) GetCurrentDatabaseName(ctx context.Context) (string, error) {
-	rows, err := s.pgxConn.Query(ctx, `SELECT current_database();`)
+func (s *PgxScript) GetCurrentDatabaseName(ctx context.Context) (string, error) {
+	rows, err := s.PgxConn.Query(ctx, `SELECT current_database();`)
 	if err != nil {
 		return "", err
 	}
@@ -181,8 +182,8 @@ func (s *PGXScript) GetCurrentDatabaseName(ctx context.Context) (string, error) 
 	return result, nil
 }
 
-func (s *PGXScript) ListTableNames(ctx context.Context) ([]string, error) {
-	rows, err := s.pgxConn.Query(ctx, `
+func (s *PgxScript) ListTableNames(ctx context.Context) ([]string, error) {
+	rows, err := s.PgxConn.Query(ctx, `
 SELECT table_name
 FROM information_schema.tables 
 WHERE 
@@ -235,8 +236,8 @@ type TableColumn struct {
 	OrdinalPosition int
 }
 
-func (s *PGXScript) ListTableColumn(ctx context.Context) ([]*TableColumn, error) {
-	rows, err := s.pgxConn.Query(ctx, `
+func (s *PgxScript) ListTableColumn(ctx context.Context) ([]*TableColumn, error) {
+	rows, err := s.PgxConn.Query(ctx, `
 SELECT
     table_name,
     data_type,
@@ -287,8 +288,8 @@ type ForeignKeyConstraint struct {
 	ForeignColumnName string
 }
 
-func (s *PGXScript) ListForeignKeyConstraint(ctx context.Context) ([]*ForeignKeyConstraint, error) {
-	rows, err := s.pgxConn.Query(ctx, `
+func (s *PgxScript) ListForeignKeyConstraint(ctx context.Context) ([]*ForeignKeyConstraint, error) {
+	rows, err := s.PgxConn.Query(ctx, `
 SELECT
     tc.constraint_name AS foreign_key_name,
     tc.table_name AS local_table,
@@ -347,8 +348,8 @@ type TableIndex struct {
 	IndexedColumnNames []string
 }
 
-func (s *PGXScript) ListTableIndex(ctx context.Context) ([]*TableIndex, error) {
-	rows, err := s.pgxConn.Query(ctx, `
+func (s *PgxScript) ListTableIndex(ctx context.Context) ([]*TableIndex, error) {
+	rows, err := s.PgxConn.Query(ctx, `
 SELECT
     t.relname AS table_name,
     i.relname AS index_name,

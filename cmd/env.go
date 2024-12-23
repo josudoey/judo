@@ -1,4 +1,4 @@
-package command
+package cmd
 
 import (
 	"github.com/caarlos0/env/v11"
