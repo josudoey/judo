@@ -52,6 +52,7 @@ func Quote(v any) Literal {
 	}
 	return Wrap(c)
 }
+
 func SingleQuote(v any) Literal {
 	var c Composable = func(b *strings.Builder, next func()) {
 		b.WriteString("'" + strings.ReplaceAll(Wrap(v).String(), "'", "\\'") + "'")
