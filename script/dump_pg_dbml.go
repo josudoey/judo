@@ -124,6 +124,9 @@ var _ = cmd.AddCommand(
 					Settings:    tableIndexSettings,
 				})
 
+				if tableIndex.IsPrimary {
+					continue
+				}
 				if len(tableFooters[tableIndex.TableName]) == 0 {
 					tableFooters[tableIndex.TableName] = append(tableFooters[tableIndex.TableName], dbml.SingleLineComment("--- Indices DDL"))
 				}
