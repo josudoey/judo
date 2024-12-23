@@ -1,8 +1,6 @@
 package dbml
 
 import (
-	"strings"
-
 	"github.com/josudoey/judo/lit"
 )
 
@@ -18,14 +16,9 @@ func (c *Column) String() string {
 }
 
 func ColumnLiteral(c *Column) lit.Literal {
-	typ := c.Type
-	if strings.Contains(typ, " ") {
-		typ = lit.Quote(c.Type).String()
-	}
-
 	if len(c.Settings) == 0 {
-		return lit.Add(c.Name, " ", typ)
+		return lit.Add(c.Name, " ", Variable(c.Type))
 	}
 
-	return lit.Add(c.Name, " ", typ, " ", lit.SquareBracket(lit.Join(c.Settings, ", ")))
+	return lit.Add(Variable(c.Name), " ", Variable(c.Type), " ", lit.SquareBracket(lit.Join(c.Settings, ", ")))
 }

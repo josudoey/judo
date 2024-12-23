@@ -1,5 +1,7 @@
 package dbml
 
+import "fmt"
+
 type implementedComment struct{}
 
 func (s *implementedComment) comment() {}
@@ -11,8 +13,9 @@ type singleLineComment struct {
 }
 
 type Comment interface {
+	fmt.Stringer
+
 	comment()
-	String() string
 }
 
 func (s *singleLineComment) String() string {

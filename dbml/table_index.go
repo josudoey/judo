@@ -13,12 +13,13 @@ func (i *TableIndex) String() string {
 		return ""
 	}
 
-	name := i.ColumnNames[0]
+	name := Variable(i.ColumnNames[0])
 	if len(i.ColumnNames) > 1 {
-		name = lit.RoundBracket(lit.Join(i.ColumnNames, ", ")).String()
+		name = lit.RoundBracket(lit.Join(Variables(i.ColumnNames), ", "))
 	}
+
 	if len(i.Settings) == 0 {
-		return name
+		return name.String()
 	}
 
 	return lit.Add(name, " ", lit.SquareBracket(lit.Join(i.Settings, ", "))).String()

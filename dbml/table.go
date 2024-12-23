@@ -16,7 +16,7 @@ type Table struct {
 }
 
 func (t *Table) String() string {
-	l := lit.Add("Table ", t.Name, " ")
+	l := lit.Add("Table ", Variable(t.Name), " ")
 	if len(t.TableSettings) > 0 {
 		l.Add(lit.SquareBracket(t.TableSettings), " ")
 	}
