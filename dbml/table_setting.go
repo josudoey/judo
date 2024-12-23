@@ -4,15 +4,17 @@ import "fmt"
 
 type TableSetting interface {
 	fmt.Stringer
+
 	tableSetting()
 }
 
-type sealedTableSetting struct{}
+type implementedTableSetting struct{}
 
-func (s sealedTableSetting) tableSetting() {}
+func (s implementedTableSetting) tableSetting() {}
 
 type headercolor struct {
-	sealedTableSetting
+	implementedTableSetting
+
 	code string
 }
 

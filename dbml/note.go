@@ -11,8 +11,9 @@ type Note interface {
 }
 
 type noteSetting struct {
-	sealedColumnSetting
-	sealedTableIndexSetting
+	implementedColumnSetting
+	implementedTableIndexSetting
+
 	text string
 }
 

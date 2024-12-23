@@ -8,15 +8,17 @@ import (
 
 type TableIndexSetting interface {
 	fmt.Stringer
+
 	tableIndexSetting()
 }
 
-type sealedTableIndexSetting struct{}
+type implementedTableIndexSetting struct{}
 
-func (s sealedTableIndexSetting) tableIndexSetting() {}
+func (s implementedTableIndexSetting) tableIndexSetting() {}
 
 type tableIndexName struct {
-	sealedTableIndexSetting
+	implementedTableIndexSetting
+
 	text string
 }
 
@@ -29,7 +31,8 @@ func TableIndexName(text string) TableIndexSetting {
 }
 
 type tableIndexType struct {
-	sealedTableIndexSetting
+	implementedTableIndexSetting
+
 	text string
 }
 

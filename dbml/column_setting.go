@@ -7,14 +7,15 @@ import (
 
 type ColumnSetting interface {
 	fmt.Stringer
+
 	columnSetting()
 }
 
-type sealedColumnSetting struct{}
+type implementedColumnSetting struct{}
 
-func (s sealedColumnSetting) columnSetting() {}
+func (s implementedColumnSetting) columnSetting() {}
 
-type null struct{ sealedColumnSetting }
+type null struct{ implementedColumnSetting }
 
 func (s *null) String() string {
 	return "null"
@@ -24,7 +25,7 @@ func Null() ColumnSetting {
 	return &null{}
 }
 
-type notNull struct{ sealedColumnSetting }
+type notNull struct{ implementedColumnSetting }
 
 func (s *notNull) String() string {
 	return "not null"
@@ -35,7 +36,7 @@ func NotNull() ColumnSetting {
 }
 
 type defaultString struct {
-	sealedColumnSetting
+	implementedColumnSetting
 	value string
 }
 
@@ -48,7 +49,7 @@ func DefaultString(value string) ColumnSetting {
 }
 
 type defaultExpression struct {
-	sealedColumnSetting
+	implementedColumnSetting
 	value string
 }
 
@@ -61,7 +62,7 @@ func DefaultExpression(value string) ColumnSetting {
 }
 
 type defaultBoolean struct {
-	sealedColumnSetting
+	implementedColumnSetting
 	value bool
 }
 
@@ -77,7 +78,7 @@ func DefaultBoolean(value bool) ColumnSetting {
 	return &defaultBoolean{value: value}
 }
 
-type defaultNull struct{ sealedColumnSetting }
+type defaultNull struct{ implementedColumnSetting }
 
 func (s *defaultNull) String() string {
 	return "default: null"
@@ -88,7 +89,7 @@ func DefaultNull() ColumnSetting {
 }
 
 type defaultInt struct {
-	sealedColumnSetting
+	implementedColumnSetting
 	value int64
 }
 
@@ -101,7 +102,7 @@ func DefaultInt(value int64) ColumnSetting {
 }
 
 type defaultFloat struct {
-	sealedColumnSetting
+	implementedColumnSetting
 	value float64
 }
 
@@ -114,7 +115,7 @@ func DefaultFloat(value float64) ColumnSetting {
 }
 
 type columnOneToMany struct {
-	sealedColumnSetting
+	implementedColumnSetting
 
 	TableName  string
 	ColumnName string
@@ -129,7 +130,7 @@ func ColumnOneToMany(tableName string, columnName string) ColumnSetting {
 }
 
 type columnManyToOne struct {
-	sealedColumnSetting
+	implementedColumnSetting
 
 	TableName  string
 	ColumnName string
@@ -144,7 +145,7 @@ func ColumnManyToOne(tableName string, columnName string) ColumnSetting {
 }
 
 type columnOneToOne struct {
-	sealedColumnSetting
+	implementedColumnSetting
 
 	TableName  string
 	ColumnName string
@@ -159,7 +160,7 @@ func ColumnOneToOne(tableName string, columnName string) ColumnSetting {
 }
 
 type columnManyToMany struct {
-	sealedColumnSetting
+	implementedColumnSetting
 
 	TableName  string
 	ColumnName string

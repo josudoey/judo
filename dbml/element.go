@@ -4,9 +4,10 @@ import "fmt"
 
 type Element interface {
 	fmt.Stringer
+
 	element()
 }
 
-type sealedElement struct{}
+type implementedElement struct{}
 
-func (s sealedElement) element() {}
+func (s implementedElement) element() {}

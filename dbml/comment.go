@@ -1,11 +1,12 @@
 package dbml
 
-type sealedComment struct{}
+type implementedComment struct{}
 
-func (s *sealedComment) comment() {}
+func (s *implementedComment) comment() {}
 
 type singleLineComment struct {
-	sealedComment
+	implementedComment
+
 	text string
 }
 

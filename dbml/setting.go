@@ -6,8 +6,8 @@ type Setting interface {
 }
 
 type pK struct {
-	sealedColumnSetting
-	sealedTableIndexSetting
+	implementedColumnSetting
+	implementedTableIndexSetting
 }
 
 func (s *pK) String() string {
@@ -19,8 +19,8 @@ func PK() Setting {
 }
 
 type primaryKey struct {
-	sealedColumnSetting
-	sealedTableIndexSetting
+	implementedColumnSetting
+	implementedTableIndexSetting
 }
 
 func (s *primaryKey) String() string {
@@ -32,8 +32,8 @@ func PrimaryKey() Setting {
 }
 
 type unique struct {
-	sealedColumnSetting
-	sealedTableIndexSetting
+	implementedColumnSetting
+	implementedTableIndexSetting
 }
 
 func (s *unique) String() string {

@@ -7,7 +7,7 @@ import (
 // ref https://dbml.dbdiagram.io/docs/#table-definition
 
 type Table struct {
-	sealedElement
+	implementedElement
 
 	Name          string
 	TableSettings []TableSetting

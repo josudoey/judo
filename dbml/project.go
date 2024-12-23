@@ -9,7 +9,7 @@ import (
 const PostgreSQL string = "PostgreSQL"
 
 type Project struct {
-	sealedElement
+	implementedElement
 
 	Name         string
 	DatabaseType string
