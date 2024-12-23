@@ -8,12 +8,14 @@ func (s *implementedComment) comment() {}
 
 type singleLineComment struct {
 	implementedComment
+	implementedElement
 
 	text string
 }
 
 type Comment interface {
 	fmt.Stringer
+	Element
 
 	comment()
 }

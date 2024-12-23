@@ -51,6 +51,7 @@ var _ = cmd.AddCommand(
 			})
 
 			tableMap := map[string]*dbml.Table{}
+			tableFooters := map[string][]dbml.Element{}
 			columnMap := map[string]map[string]*dbml.Column{}
 			columnUniqMap := map[string]map[string]bool{}
 			for _, column := range tableColumns {
@@ -111,15 +112,22 @@ var _ = cmd.AddCommand(
 				if tableIndex.IsUnique {
 					tableIndexSettings = append(tableIndexSettings, dbml.Unique())
 				}
+				tableIndexSettings = append(tableIndexSettings, dbml.TableIndexType(tableIndex.IndexType))
 
-				tableIndexSettings = append(tableIndexSettings,
-					dbml.TableIndexType(tableIndex.IndexType),
-					dbml.TableIndexName(tableIndex.IndexName))
+				if tableIndex.IndexCondition != nil {
+					tableIndexSettings = append(tableIndexSettings, dbml.TableIndexNote("IndexCondition: "+*tableIndex.IndexCondition))
+				}
+				tableIndexSettings = append(tableIndexSettings, dbml.TableIndexName(tableIndex.IndexName))
 
 				t.TableIndexes = append(t.TableIndexes, &dbml.TableIndex{
 					ColumnNames: tableIndex.IndexedColumnNames,
 					Settings:    tableIndexSettings,
 				})
+
+				if len(tableFooters[tableIndex.TableName]) == 0 {
+					tableFooters[tableIndex.TableName] = append(tableFooters[tableIndex.TableName], dbml.SingleLineComment("--- Indices DDL"))
+				}
+				tableFooters[tableIndex.TableName] = append(tableFooters[tableIndex.TableName], dbml.SingleLineComment(tableIndex.IndexDefinition))
 			}
 
 			for _, fk := range foreignKeyConstraints {
@@ -150,6 +158,10 @@ var _ = cmd.AddCommand(
 				if ok {
 					doc.Append(table)
 				}
+				for _, footer := range tableFooters[tableName] {
+					doc.Append(footer)
+				}
+				doc.Append(dbml.NewLine())
 			}
 
 			fmt.Printf("%v", doc)
