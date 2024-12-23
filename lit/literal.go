@@ -25,12 +25,3 @@ func (b *literal) String() string {
 func Add(elems ...any) Literal {
 	return &literal{elems: elems}
 }
-
-func Slice[T any](a []T) []any {
-	items := make([]any, len(a))
-	for i, item := range a {
-		items[i] = Wrap(item)
-	}
-
-	return items
-}

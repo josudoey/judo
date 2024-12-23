@@ -27,5 +27,5 @@ func ColumnLiteral(c *Column) lit.Literal {
 		return lit.Add(c.Name, " ", typ)
 	}
 
-	return lit.Add(c.Name, " ", typ, " ", lit.SquareBracket(lit.Join(lit.Slice(c.Settings), ", ")))
+	return lit.Add(c.Name, " ", typ, " ", lit.SquareBracket(lit.Join(c.Settings, ", ")))
 }

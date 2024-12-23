@@ -33,15 +33,15 @@ var _ = DescribeTable("Join", func(items []any, sep string, expected string) {
 		"a, b"),
 )
 
-var _ = DescribeTable("IndentSpace", func(v any, numberOfSpace int, expected string) {
-	Expect(IndentSpace(v, numberOfSpace).String()).To(Equal(expected))
+var _ = DescribeTable("AddIndentSpace", func(v []any, numberOfSpace int, expected string) {
+	Expect(Join(AddIndentSpace(v, numberOfSpace), "\n").String()).To(Equal(expected))
 },
 	Entry("empty",
-		Empty, 0, ""),
+		[]any{Empty}, 0, ""),
 	Entry("0 space",
-		"a", 0, "a"),
+		[]any{"a"}, 0, "a"),
 	Entry("2 space",
-		"a", 2, "  a"),
+		[]any{"a"}, 2, "  a"),
 )
 
 var _ = DescribeTable("Quote", func(v any, expected string) {

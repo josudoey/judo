@@ -18,7 +18,7 @@ func SquareBracket(v any) Literal {
 	return Add("[", v, "]")
 }
 
-func Join(items []any, sep string) Literal {
+func Join[T any](items []T, sep string) Literal {
 	if len(items) == 0 {
 		return Add()
 	}
@@ -30,8 +30,13 @@ func Join(items []any, sep string) Literal {
 	return l
 }
 
-func IndentSpace(v any, numberOfSpace int) Literal {
-	return Add(strings.Repeat(" ", numberOfSpace), v)
+func AddIndentSpace[T any](items []T, numberOfSpace int) []Literal {
+	result := make([]Literal, len(items))
+	for i, item := range items {
+		result[i] = Add(strings.Repeat(" ", numberOfSpace), item)
+	}
+
+	return result
 }
 
 func Format(format string, a ...any) Literal {

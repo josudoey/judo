@@ -22,7 +22,7 @@ func (d *document) Append(e Element) Document {
 }
 
 func (d *document) String() string {
-	return lit.Join(lit.Slice(d.children), "\n").String()
+	return lit.Join(d.children, "\n").String()
 }
 
 func New() Document {

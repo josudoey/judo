@@ -18,14 +18,10 @@ type Table struct {
 func (t *Table) String() string {
 	l := lit.Add("Table ", t.Name, " ")
 	if len(t.TableSettings) > 0 {
-		l.Add(lit.SquareBracket(lit.Slice(t.TableSettings)), " ")
+		l.Add(lit.SquareBracket(t.TableSettings), " ")
 	}
 
-	columns := lit.Slice(t.Columns)
-	for i, column := range columns {
-		columns[i] = lit.IndentSpace(column, 2)
-	}
-
+	columns := lit.AddIndentSpace(t.Columns, 2)
 	if len(t.TableIndexes) == 0 {
 		return l.Add(lit.CurlyBracket(
 			lit.Add(
@@ -36,11 +32,7 @@ func (t *Table) String() string {
 		), "\n").String()
 	}
 
-	tableIndexes := lit.Slice(t.TableIndexes)
-	for i, tableIndex := range tableIndexes {
-		tableIndexes[i] = lit.IndentSpace(tableIndex, 4)
-	}
-
+	tableIndexes := lit.AddIndentSpace(t.TableIndexes, 4)
 	return l.Add(lit.CurlyBracket(
 		lit.Add(
 			"\n",

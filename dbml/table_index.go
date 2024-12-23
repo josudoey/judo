@@ -15,11 +15,11 @@ func (i *TableIndex) String() string {
 
 	name := i.ColumnNames[0]
 	if len(i.ColumnNames) > 1 {
-		name = lit.RoundBracket(lit.Join(lit.Slice(i.ColumnNames), ", ")).String()
+		name = lit.RoundBracket(lit.Join(i.ColumnNames, ", ")).String()
 	}
 	if len(i.Settings) == 0 {
 		return name
 	}
 
-	return lit.Add(name, " ", lit.SquareBracket(lit.Join(lit.Slice(i.Settings), ", "))).String()
+	return lit.Add(name, " ", lit.SquareBracket(lit.Join(i.Settings, ", "))).String()
 }
