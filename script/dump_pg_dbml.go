@@ -350,6 +350,25 @@ type TableIndex struct {
 
 func (s *PgxScript) ListTableIndex(ctx context.Context) ([]*TableIndex, error) {
 	rows, err := s.PgxConn.Query(ctx, `
+WITH indexed_columns AS (SELECT
+    ix.indrelid,
+    ix.indexrelid,
+    array_agg(a.attname) as names
+FROM
+    pg_class t,
+    pg_class i,
+    pg_index ix,
+    pg_attribute a
+WHERE
+    t.oid = ix.indrelid
+    AND i.oid = ix.indexrelid
+    AND a.attrelid = t.oid
+    AND a.attnum = ANY(ix.indkey)
+    AND t.relkind = 'r'
+GROUP BY
+    ix.indrelid,
+    ix.indexrelid
+)
 SELECT
     t.relname AS table_name,
     i.relname AS index_name,
@@ -358,24 +377,24 @@ SELECT
     ix.indisprimary AS is_primary,
     pg_get_indexdef(ix.indexrelid) AS index_definition,
     pg_get_expr(ix.indpred, ix.indrelid) AS index_condition,
-    ARRAY(
-        SELECT a.attname
-        FROM unnest(ix.indkey) WITH ORDINALITY AS k(attnum, ordinality)
-        JOIN pg_attribute a ON a.attnum = k.attnum AND a.attrelid = t.oid
-        ORDER BY k.ordinality
-    ) AS indexed_column_names
+    ic.names AS index_column_names
 FROM
-    pg_index ix
-JOIN
-    pg_class i ON i.oid = ix.indexrelid
-JOIN
-    pg_class t ON t.oid = ix.indrelid
-JOIN
-    pg_am am ON i.relam = am.oid
+    pg_class t,
+    pg_class i,
+    pg_index ix,
+    pg_am am,
+    indexed_columns ic
 WHERE
     t.relnamespace = (SELECT oid FROM pg_namespace WHERE nspname = 'public')
-GROUP BY
-    t.relname, i.relname, ix.indexrelid, ix.indrelid, t.oid, am.amname;`)
+    AND t.oid = ix.indrelid
+    AND i.oid = ix.indexrelid
+    AND i.relam = am.oid
+    AND ic.indrelid = ix.indrelid
+    AND ic.indexrelid = ix.indexrelid
+ORDER BY
+    t.relname,
+    i.relname
+;`)
 	if err != nil {
 		return nil, err
 	}
