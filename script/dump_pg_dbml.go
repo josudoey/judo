@@ -158,9 +158,11 @@ var _ = cmd.AddCommand(
 
 			for _, tableName := range tableNames {
 				table, ok := tableMap[tableName]
-				if ok {
-					doc.Append(table)
+				if !ok {
+					continue
 				}
+
+				doc.Append(table)
 				for _, footer := range tableFooters[tableName] {
 					doc.Append(footer)
 				}
