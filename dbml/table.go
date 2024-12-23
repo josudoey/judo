@@ -29,7 +29,7 @@ func (t *Table) String() string {
 				lit.Join(columns, "\n"),
 				"\n",
 			),
-		), "\n").String()
+		)).String()
 	}
 
 	tableIndexes := lit.AddIndentSpace(t.TableIndexes, 4)
@@ -45,5 +45,5 @@ func (t *Table) String() string {
 					"\n  "),
 			), "\n",
 		),
-	), "\n").String()
+	)).String()
 }

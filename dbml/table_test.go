@@ -23,8 +23,7 @@ var _ = DescribeTable("Table", func(t *Table, expected string) {
   username varchar
   role varchar
   created_at timestamp
-}
-`),
+}`),
 	Entry(`posts`,
 		&Table{
 			Name: "posts",
@@ -42,8 +41,7 @@ var _ = DescribeTable("Table", func(t *Table, expected string) {
   body text [note: 'Content of the post']
   user_id integer
   created_at timestamp
-}
-`),
+}`),
 	Entry(`bookings`,
 		&Table{
 			Name: "bookings",
@@ -52,7 +50,7 @@ var _ = DescribeTable("Table", func(t *Table, expected string) {
 				{Name: "country", Type: "varchar"},
 				{Name: "booking_date", Type: "date"},
 				{Name: "created_at", Type: "timestamp"},
-		},
+			},
 			TableIndexes: []*TableIndex{
 				{ColumnNames: []string{"id", "country"}, Settings: []TableIndexSetting{PK()}},
 				{ColumnNames: []string{"created_at"}, Settings: []TableIndexSetting{TableIndexName("created_at_index"), TableIndexNote("Date")}},
@@ -74,6 +72,5 @@ var _ = DescribeTable("Table", func(t *Table, expected string) {
     (country, booking_date) [unique]
     booking_date [type: hash]
   }
-}
-`),
+}`),
 )
