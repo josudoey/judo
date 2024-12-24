@@ -10,7 +10,7 @@ import (
 type loggerContextKey struct{}
 
 func LoggerPlugin(ctx context.Context) (context.Context, context.CancelFunc) {
-	logger, err := zap.NewProduction()
+	logger, err := zap.NewDevelopment()
 	if err != nil {
 		log.Fatal(err)
 	}
