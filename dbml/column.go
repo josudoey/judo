@@ -17,7 +17,7 @@ func (c *Column) String() string {
 
 func ColumnLiteral(c *Column) lit.Literal {
 	if len(c.Settings) == 0 {
-		return lit.Add(c.Name, " ", Variable(c.Type))
+		return lit.Add(Variable(c.Name), " ", Variable(c.Type))
 	}
 
 	return lit.Add(Variable(c.Name), " ", Variable(c.Type), " ", lit.SquareBracket(lit.Join(c.Settings, ", ")))
