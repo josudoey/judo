@@ -367,24 +367,31 @@ type TableIndex struct {
 
 func (s *PgxScript) ListTableIndex(ctx context.Context) ([]*TableIndex, error) {
 	rows, err := s.PgxConn.Query(ctx, `
-WITH indexed_columns AS (SELECT
-    ix.indrelid,
-    ix.indexrelid,
-    array_agg(a.attname) as names
+WITH unnest_index AS (SELECT 
+  ix.indexrelid,
+  ix.indrelid,
+  unnest.indkey,
+  unnest.ordinal
+FROM pg_index ix
+LEFT JOIN LATERAL UNNEST(ix.indkey) WITH ORDINALITY AS UNNEST(indkey, ordinal) ON true)
+,indexed_columns AS (SELECT
+    uix.indrelid,
+    uix.indexrelid,
+    ARRAY_AGG(a.attname ORDER BY uix.ordinal) AS names
 FROM
     pg_class t,
     pg_class i,
-    pg_index ix,
+    unnest_index uix,
     pg_attribute a
 WHERE
-    t.oid = ix.indrelid
-    AND i.oid = ix.indexrelid
+    t.oid = uix.indrelid
+    AND i.oid = uix.indexrelid
     AND a.attrelid = t.oid
-    AND a.attnum = ANY(ix.indkey)
+    AND a.attnum = uix.indkey
     AND t.relkind = 'r'
 GROUP BY
-    ix.indrelid,
-    ix.indexrelid
+    uix.indrelid,
+    uix.indexrelid
 )
 SELECT
     t.relname AS table_name,
